@@ -1,0 +1,181 @@
+worker_processes 2;
+
+events {
+    worker_connections 256;
+}
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    sendfile        on;
+    sendfile_max_chunk 6k;
+    tcp_nopush      on;
+    tcp_nodelay     on;
+    keepalive_timeout 65;
+    types_hash_max_size 4096;
+    include /etc/nginx/conf.d/*.conf;
+
+    upstream backend {
+        server 127.0.0.1:8000;
+    }
+
+    server {
+        listen 80;
+        listen [::]:80;
+        root         /usr/share/nginx/html;
+        server_tokens off; 
+
+        server_name SERVER_NAME;
+        return 301 https://$host$request_uri;
+
+        include /etc/nginx/default.d/*.conf;
+
+        error_page 404 =302 /404.html;
+        location = /404.html {
+        }
+
+        error_page 500 502 503 504 =302 /50x.html;
+        location = /50x.html {
+        }
+    }
+
+    server {
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
+        
+        server_name SERVER_NAME;
+        root         /usr/share/nginx/html/;
+
+        # SSL configuration
+        ssl_certificate "/etc/letsencrypt/live/SERVER_NAME/fullchain.pem";
+        ssl_certificate_key "/etc/letsencrypt/live/SERVER_NAME/privkey.pem";
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_session_cache shared:SSL:1m;
+        ssl_session_timeout 5m;
+        ssl_prefer_server_ciphers on;
+
+        # zip it all
+        gzip_static on;
+        gzip on;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+        gzip_vary on;
+
+        # CORS headers
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+        add_header 'Access-Control-Allow-Headers' 'Origin, Content-Type, Accept, Authorization';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        server_tokens off;
+
+        #Egg
+        add_header "Watchu-Doing" 'Nooooooooooooooooo';
+
+
+        error_page 500 501 502 503 504 =302 /50x.html;
+        error_page 404 =302 /404.html;
+
+        include /etc/nginx/default.d/*.conf;
+
+
+        # Serve React app
+        location / {
+
+
+            root   /usr/share/nginx/html/dist;
+            index index.html;
+            try_files $uri $uri/ /index.html;
+
+
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            proxy_intercept_errors on;
+            # error_page 501 502 503 504 = @json_error;
+
+        }
+
+        location @json_error {
+            default_type application/json;
+            return 404 '{"error": "Resource not found"}';
+        }
+
+        location @fallback {
+            internal;
+            try_files /404.html =404;
+        }
+
+        # Serve static assets with http://backend check
+        location /assets/ {
+            #max files 200, caching for 15 days, check every 24 hours, first request puts in cache
+            open_file_cache max=200 inactive=1296000s; 
+            open_file_cache_valid 86400s;                   
+            open_file_cache_min_uses 1;    
+
+            expires 30d;
+            add_header  Cache-Control "public";
+
+            root /usr/share/nginx/html/dist;
+        }
+
+        location /api/ {
+            proxy_pass http://backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_intercept_errors on; 
+        }
+
+        # Proxy /auth requests to Django http://backend
+        location /auth/ {
+            proxy_pass http://backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_intercept_errors on; 
+        }
+
+        location /test/ {
+            proxy_pass http://backend/api/test/;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_intercept_errors on; 
+        }
+        # location /mail_test/ {
+        #     proxy_pass http://backend;
+        #     proxy_set_header Host $host;
+        #     proxy_set_header X-Real-IP $remote_addr;
+        #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        #     proxy_set_header X-Forwarded-Proto $scheme;
+        #     proxy_intercept_errors on; # Intercept errors
+        #     error_page 404 /404.html;
+        #     error_page 500 502 503 504 /50x.html;
+        # }
+
+        # Serve error page
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+            # internal;
+        }
+
+        location = /404.html {
+            root   /usr/share/nginx/html;
+            # internal;
+        }
+
+        location = /404 {
+            root   /usr/share/nginx/html;
+            # internal;
+        }
+    }
+
+
+}

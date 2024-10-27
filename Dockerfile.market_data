@@ -1,0 +1,45 @@
+# Use the alpine variant of Python for an even smaller footprint
+ARG PYTHON_VERSION=3.11.9
+FROM python:${PYTHON_VERSION}-alpine
+
+# Prevents Python from writing pyc files
+# ENV PYTHONDONTWRITEBYTECODE=1
+
+# Keeps Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1
+
+# Set the working directory inside the container
+WORKDIR /carmagnole
+
+RUN apk add --no-cache \
+    chromium \
+    chromium-chromedriver \
+    unzip \
+    bash \
+    udev \
+    ttf-freefont\
+    ca-certificates \
+    curl \
+    openssl \
+    postgresql-client \
+    cronie \
+    && update-ca-certificates
+
+COPY ./market_data/ /carmagnole/market_data/
+COPY ./utils/models.py /carmagnole/market_data/utils/models.py
+COPY ./market_data/requirements.txt .
+
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+CHROMEDRIVER=/usr/bin/chromedriver
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt 
+
+
+# Ensure the fetch_market_data.py script is executable
+RUN chmod +x /carmagnole/market_data/fetch_market_data.py
+
+
+# Command to run the script
+CMD ["python", "/carmagnole/market_data/fetch_market_data.py"]

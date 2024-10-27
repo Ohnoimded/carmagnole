@@ -1,0 +1,129 @@
+services:
+  # nginx:
+  #   image: nginx
+  #   container_name: nginx_proxy
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./certificates:/etc/nginx/certificates
+  #     - ./templates:/etc/nginx/templates
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   depends_on:
+  #     - web
+  #     - market_data
+  #   networks:
+  #     - app-network
+  #   mem_limit: 256M
+
+  web:
+    build: .
+    container_name: carmagnole
+    volumes:
+      - type: bind
+        source: ./
+        target: /carmagnole
+      ##  etl folder bindings meant for debugging only
+      # - type: bind
+      #   source: ./etl/logs
+      #   target: /carmagnole/etl/logs
+      # - type: bind
+      #   source: ./etl/data
+      #   target: /carmagnole/etl/data
+      # - ./etl/data:/carmagnole/etl/data
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - app-network
+    mem_limit: 512m
+    cpus: '0.5'
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    restart: always
+
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A carmagnole worker -l info  --concurrency=2 --max-tasks-per-child=3
+    volumes:
+      - type: bind
+        source: ./
+        target: /carmagnole
+    env_file:
+      - .env
+    networks:
+      - app-network
+    depends_on:
+      - web
+      - redis_server
+    restart: always
+    cpus: '1'
+
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    command: celery -A carmagnole beat -l info
+    volumes:
+      - type: bind
+        source: ./
+        target: /carmagnole
+    env_file:
+      - .env
+    networks:
+      - app-network
+    depends_on:
+      - web
+      - celery
+      - redis_server
+    restart: always
+    cpus: '0.5'
+
+
+  market_data:
+    build:
+      context: ./
+      dockerfile: Dockerfile.market_data
+    container_name: market_live_fetcher
+    env_file:
+      - .env
+    networks:
+      - app-network
+    mem_limit: 86m
+    restart: always
+
+
+
+  redis_server:
+    build:
+      context: ./
+      dockerfile: Dockerfile.redis_server
+    container_name: redis_server
+    # sysctls:
+    #   - net.core.somaxconn=1024
+    #   - vm.overcommit_memory=1
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - "6379:6379"
+    mem_limit: 128M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge

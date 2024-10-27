@@ -1,0 +1,73 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+.env
+
+# Django static files
+staticfiles/
+
+# Django media files
+media/
+
+# Database
+db.sqlite3
+
+# Virtual environment
+.venv/
+
+# IDE files
+.idea/
+.vscode/
+
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Cache files
+__pycache__/
+.mypy_cache
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+
+# Database
+db.sqlite3
+
+# Django static files
+staticfiles/
+
+# Django media files
+media/
+
+# Environment variables
+.env
+
+# Dependency directories
+lib/
+lib64/
+
+# dev folders
+certificates/
+/.requirements-celery.txt
+/gunicorn_config.py
+/.venv
+/.vscode
+/.mypy_cache
+/market_data/delete.ipynb
+/etl/data/daily_extraction_transformed.csv
+/etl/data/daily_extraction.json
+/etl/data/frequent_extraction_transformed.csv
+/etl/data/frequent_extraction.json
+/etl/logs/api_log.log
+/etl/logs/etl_log.log
+/nginx/nginx.conf
+/README.md

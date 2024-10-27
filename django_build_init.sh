@@ -75,7 +75,7 @@ service cron start
 #             --read-timeout 120 \
 #             -w 1
 
-uvicorn carmagnole.asgi:application --reload --host 0.0.0.0 --port 8000 
+uvicorn carmagnole.asgi:application  --host 0.0.0.0 --port 8000 
 # \
     # --ssl-keyfile ./certificates/carmagnole.key \
     # --ssl-certfile ./certificates/carmagnole.crt \

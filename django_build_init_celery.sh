@@ -14,6 +14,6 @@ python manage.py migrate
 
 
 
-uvicorn carmagnole.asgi:application --reload --host 0.0.0.0 --port 8000 \
+uvicorn carmagnole.asgi:application --host 0.0.0.0 --port 8000 
 
-    --log-level debug 
+    # --log-level debug 

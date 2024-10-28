@@ -40,9 +40,9 @@ def send_newsletter():
                 if redis_client.sismember('sent_newsletter_subscribers', subscriber.id):
                     continue
                 email = EmailMultiAlternatives(
-                    subject='Your Daily Newsletter is here!!!!',
-                    body="Here is today's newsletter.",  # Plain text content
-                    from_email='Carmagnole <noreply@carmagnole.ohnoimded.com>',
+                    subject="Le Carmagnole: Daily Nuggets",
+                    body="Today's Top News",  # Plain text content
+                    from_email='Le Carmagnole <noreply@carmagnole.ohnoimded.com>',
                     to=[subscriber.email],
                 )
                 email.attach_alternative(html_content, "text/html")

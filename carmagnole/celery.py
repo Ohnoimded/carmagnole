@@ -19,7 +19,7 @@ app.conf.result_expires = timedelta(hours=3)
 app.conf.beat_schedule = {
     'send-newsletter-every-2-minutes': {
         'task': 'mails.tasks.send_newsletter',
-        'schedule': crontab(hour='8', minute="30"),  
+        'schedule': crontab(hour='4', minute="30"),  
     },
     'clear-expired-redis-keys-every-six-hours': {
         'task': 'utils.tasks.clear_expired_redis_keys',

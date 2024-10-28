@@ -24,10 +24,15 @@ class GoogleCookieManager:
     @sync_to_async
     def fetch_store_google_cookies(self):
         try:
+            self.driver.get('https://www.google.com/')
+            self.driver.delete_all_cookies()
+            self.driver.execute_script("window.localStorage.clear();")
+            self.driver.execute_script("window.sessionStorage.clear();")
+            
             self.driver.get(f'https://www.google.com/finance/quote/NIFTY_50:INDEXNSE')
             self.driver.execute_script('document.getElementsByTagName("html")[0].style.scrollBehavior = "auto"')
             
-            WebDriverWait(self.driver, 60).until(EC.element_to_be_clickable((By.XPATH, '''/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]'''))).click()
+            WebDriverWait(self.driver, 120).until(EC.element_to_be_clickable((By.XPATH, '''/html/body/c-wiz/div/div/div/div[2]/div[1]/div[3]/div[1]/div[1]/form[2]'''))).click()
             
             WebDriverWait(self.driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
             

@@ -59,14 +59,14 @@ def findTopArticlesLast32Hours():
     # for i in range(10):
     #     print('he', end='')
 
-    columns = ['id', 'article_id', 'polarity_pos', 'polarity_neu', 'polarity_neg',
+    columns = ['id', 'article', 'polarity_pos', 'polarity_neu', 'polarity_neg',
                'polarity_comp', 'wordcount', 'n_sentences', 'article_embedding_norm',
                'readability_flesch_reading_ease', 'readability_dale_chall_readability_score',
                'readability_time_to_read']
 
     thirty_two_hrs_ago = datetime.now(UTC)-timedelta(hours=27) 
     exists_query = FrequentData.objects.filter(
-        id=OuterRef('article_id'), imageurl__isnull=False).exclude(section__in = ['lifeandstyle','society'], imageurl="nan", author = "Corrections and clarifications column editor" )
+        id=OuterRef('article'), imageurl__isnull=False).exclude(section__in = ['lifeandstyle','society','gnm-press-office'], imageurl="nan", author = "Corrections and clarifications column editor" )
     data = ArticleMetaAnalytics.objects.filter(created_at__gt=thirty_two_hrs_ago).annotate(
             has_image=Exists(exists_query)).filter(has_image=True).values_list(*columns)
 

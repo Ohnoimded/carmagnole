@@ -32,9 +32,9 @@ def send_test_email(html_content,text_content):
     #     fail_silently=False,
     # )
     email = EmailMultiAlternatives(
-        subject='Your Daily Newsletter is here!!!!',
-        body=text_content,  
-        from_email='noreply@carmagnole.ohnoimded.com',
+        subject="Le Carmagnole: Daily Nuggets",
+        body="Today's Top News", 
+        from_email='Le Carmagnole <noreply@carmagnole.ohnoimded.com>',
         to=['nived@ohnoimded.com'],
     )
 

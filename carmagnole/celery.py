@@ -17,7 +17,7 @@ app.conf.result_expires = timedelta(hours=3)
 
 
 app.conf.beat_schedule = {
-    'send-newsletter-every-2-minutes': {
+    'send-newsletter-everyday': {
         'task': 'mails.tasks.send_newsletter',
         'schedule': crontab(hour='4', minute="30"),  
     },

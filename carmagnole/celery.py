@@ -14,7 +14,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.result_expires = timedelta(hours=3)
-
+app.conf.broker_connection_retry_on_startup = True
 
 app.conf.beat_schedule = {
     'send-newsletter-everyday': {

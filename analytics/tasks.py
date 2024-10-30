@@ -59,7 +59,7 @@ def findTopArticlesLast32Hours():
     # for i in range(10):
     #     print('he', end='')
 
-    columns = ['id', 'article', 'polarity_pos', 'polarity_neu', 'polarity_neg',
+    columns = ['article_id', 'article', 'polarity_pos', 'polarity_neu', 'polarity_neg',
                'polarity_comp', 'wordcount', 'n_sentences', 'article_embedding_norm',
                'readability_flesch_reading_ease', 'readability_dale_chall_readability_score',
                'readability_time_to_read']

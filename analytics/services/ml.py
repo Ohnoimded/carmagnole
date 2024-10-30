@@ -92,7 +92,7 @@ class NLPProcessor:
                                    ])
         category_counts = dict(sorted(category_counts.most_common(100), key=lambda item: item[1], reverse=True))
         return {
-            "article": int(id),
+            "article_id": int(id),
             "polarity_pos": polarity["positive"],
             "polarity_neu": polarity["neutral"],
             "polarity_neg": polarity["negative"],
@@ -184,7 +184,7 @@ class ArticleRanker:
                                            )
 
         raw_data.loc[:, 'rank'] = raw_data.loc[:,'final_score'].rank(ascending=False, method='dense')
-        # return raw_data.loc[:, ['article', 'polarity_difference', 'sentiment_magnitude', 
+        # return raw_data.loc[:, ['article_id', 'polarity_difference', 'sentiment_magnitude', 
         #                  'polarity_comp', 'entropy', 'final_score', 'rank']].sort_values(by='rank')
-        return raw_data.loc[:, ['article', 'final_score', 'rank']].sort_values(by='rank').reset_index(drop=True).loc[:,"article"].to_list()
+        return raw_data.loc[:, ['article_id', 'final_score', 'rank']].sort_values(by='rank').reset_index(drop=True).loc[:,"article_id"].to_list()
 

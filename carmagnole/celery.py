@@ -23,6 +23,6 @@ app.conf.beat_schedule = {
     },
     'clear-expired-redis-keys-every-six-hours': {
         'task': 'utils.tasks.clear_expired_redis_keys',
-        'schedule': crontab(hour='6'),  
+        'schedule': crontab(hour='*/6'),  
     },
 }

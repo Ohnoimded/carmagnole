@@ -34,9 +34,13 @@ def send_newsletter():
             filter(subscribed=True, id__gt=last_id).order_by('id')[:10]
         else:
             subscribers = NewsletterSubscriberModel.objects.all().filter(subscribed = True).order_by('id')[:10]
-
+        
+        if not subscribers:
+            break
+        
         try:
             for subscriber in subscribers:
+                
                 if redis_client.sismember('sent_newsletter_subscribers', subscriber.id):
                     continue
                 email = EmailMultiAlternatives(
@@ -47,11 +51,13 @@ def send_newsletter():
                 )
                 email.attach_alternative(html_content, "text/html")
                 email.send()
+                
                 redis_client.sadd('sent_newsletter_subscribers', subscriber.id)
                 redis_client.expire('sent_newsletter_subscribers', 60**60*6) 
-                if subscribers:
-                    redis_client.set('sent_newsletter_subscribers_last_id', subscribers.last().id, ex=60 * 60 * 2)
-                time.sleep(1)
+                
+            last_subscriber_id = subscribers.last().id
+            redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id)
+            time.sleep(1)
         except:
             pass
         

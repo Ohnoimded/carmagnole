@@ -1,0 +1,185 @@
+
+##############################################################################
+
+Stock market related DB functions
+
+##############################################################################
+
+1. Get current trading symbols based on local timezone and trading hours.
+		CREATE OR REPLACE FUNCTION get_current_trading_symbols()
+			RETURNS TABLE(
+				id INT,
+				description VARCHAR(120),
+				google VARCHAR(20),
+				timezone_name VARCHAR(34)
+			) AS $$
+			BEGIN
+				RETURN QUERY
+				SELECT DISTINCT ss.id, ss.description, ss.google, se.timezone_name
+				FROM stock_symbols ss
+				INNER JOIN stock_symbols_exchange_mic sse
+					ON sse.stocksymbolsmodel_id = ss.id
+				INNER JOIN stock_exchanges se 
+					ON se.id = sse.stockmarketsmodel_id
+				WHERE se.timezone_name IN (
+					SELECT DISTINCT se_inner.timezone_name
+					FROM stock_exchanges se_inner
+					WHERE 
+						EXTRACT(DOW FROM now() AT TIME ZONE se_inner.timezone_name) NOT IN (0, 6)  -- Exclude weekends
+						AND 
+						date_trunc('second', now() AT TIME ZONE se_inner.timezone_name) BETWEEN
+						(date_trunc('day', now() AT TIME ZONE se_inner.timezone_name) + INTERVAL '8 hours 30 minutes') AND
+						(date_trunc('day', now() AT TIME ZONE se_inner.timezone_name) + INTERVAL '17 hours')
+				);
+			END;
+			$$ LANGUAGE plpgsql;
+
+		SELECT * FROM get_current_trading_symbols();
+
+
+
+2. Add previous ohlc data to historic table
+ 
+		CREATE OR REPLACE FUNCTION update_stock_market_prices_historic()
+		RETURNS void LANGUAGE plpgsql AS $$
+		BEGIN
+			INSERT INTO stock_market_prices_historic (symbol_id, trading_date, open_price, close_price, high_price, low_price)
+			SELECT symbol_id, trading_date, open_price, close_price, high_price, low_price
+			FROM (
+				WITH ohlc_data AS (
+					SELECT
+						smp.symbol_id,
+						(smp.time AT TIME ZONE se.timezone_name)::date AS trading_date,
+						FIRST_VALUE(smp.price) OVER (PARTITION BY smp.symbol_id, DATE(smp.time AT TIME ZONE se.timezone_name) ORDER BY smp.id ASC) AS open_price,
+						LAST_VALUE(smp.price) OVER (PARTITION BY smp.symbol_id, DATE(smp.time AT TIME ZONE se.timezone_name) ORDER BY smp.id RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS close_price,
+						MAX(smp.price) OVER (PARTITION BY smp.symbol_id, DATE(smp.time AT TIME ZONE se.timezone_name)) AS high_price,
+						MIN(smp.price) OVER (PARTITION BY smp.symbol_id, DATE(smp.time AT TIME ZONE se.timezone_name)) AS low_price
+						FROM stock_market_prices smp
+						JOIN stock_symbols ss ON smp.symbol_id = ss.google
+						JOIN stock_symbols_exchange_mic ssem ON ss.id = ssem.stocksymbolsmodel_id
+						JOIN stock_exchanges se ON se.id = ssem.stockmarketsmodel_id
+						WHERE DATE(smp.time AT TIME ZONE se.timezone_name) = (current_timestamp AT TIME ZONE se.timezone_name)::date - 1
+							AND (current_timestamp AT TIME ZONE se.timezone_name)::time >= '08:00:00' 
+						)
+						SELECT DISTINCT
+							symbol_id,
+							trading_date,
+							open_price,
+							close_price,
+							high_price,
+							low_price
+						FROM ohlc_data
+						ORDER BY
+							trading_date DESC,
+							symbol_id ASC
+			) subquery
+			ON CONFLICT (symbol_id, trading_date) DO NOTHING;
+		END $$;
+		
+		SELECT update_stock_market_prices_historic();
+
+3. Scheduled job: Insert previous day's or last updated prices to the table 
+	Needed to modify parameter values in custom parameter group. added pg_cron in the accepted values. changed dbname.
+		CREATE EXTENSION pg_cron;
+		SELECT cron.schedule(
+		  '0 */12 * * *',  
+		  'SELECT update_stock_market_prices_historic();'
+		);
+4. Function to clean stock_market_prices table by removing rows older than 5 days.
+	CREATE OR REPLACE FUNCTION clean_stock_market_prices()
+		RETURNS void LANGUAGE plpgsql AS $$
+		BEGIN
+			 DELETE	FROM stock_market_prices WHERE stock_market_prices.time < NOW() - INTERVAL '5 days';
+		END $$;
+5. Scheduled job: Clean stock_market_prices table by removing rows older than 5 days 
+	SELECT cron.schedule(
+		  '0 0 * * 0',  
+		  'SELECT  clean_stock_market_prices();'
+		);
+
+6. Materialized view: Latest and historic data for all stock tickers. ADD TO RDS
+	DROP MATERIALIZED VIEW IF EXISTS stock_prices_matview;
+	CREATE MATERIALIZED VIEW stock_prices_matview AS
+			WITH latest_prices 
+			AS (
+				SELECT t1.*
+				FROM stock_market_prices AS t1
+				LEFT OUTER JOIN stock_market_prices AS t2
+					ON t1.symbol_id = t2.symbol_id 
+					AND (t1.id < t2.id 
+					OR (t1.id = t2.id AND t1.id < t2.id))
+				WHERE t2.symbol_id IS NULL
+				),
+			previous_prices AS (
+			SELECT t1.close_price, t1.trading_date, t1.symbol_id
+				FROM stock_market_prices_historic AS t1
+				LEFT OUTER JOIN stock_market_prices_historic AS t2
+					ON t1.symbol_id = t2.symbol_id 
+					AND (t1.trading_date < t2.trading_date )
+					-- OR (t1.id = t2.id AND t1.id < t2.id))
+				WHERE t2.symbol_id IS NULL
+			)
+			SELECT DISTINCT ON (lp.symbol_id)
+				ss.id, 
+				lp.symbol_id ticker_symbol,
+				ss.description ticker_desc, 
+				ss.ticker  ticker_short,
+				lp.time current_time_utc,
+				lp.time AT TIME ZONE se.timezone_name current_time_ltz, 
+				se.timezone_name,
+				lp.price current_price,	
+				pp.close_price last_price,	
+				pp.trading_date last_traded_date,
+				-- ss.ticker ticker_name,
+				cc.name currency_name, 
+				cc.code currency_code,	
+				cs.html_code,
+				cc.prefix currency_prefix,
+				cs.unicode_value currency_unicode
+			
+			FROM latest_prices lp
+			JOIN stock_symbols ss ON 
+				lp.symbol_id = ss.google
+			JOIN stock_symbols_exchange_mic ssem ON
+				ss.id = ssem.stocksymbolsmodel_id
+			JOIN stock_exchanges se ON
+				se.id = ssem.stockmarketsmodel_id
+			JOIN currencies cc ON
+				ss.currency_id = cc.code
+			JOIN currencies_symbol csm2m ON
+				cc.id = csm2m.currencymodel_id
+			JOIN currency_symbols cs ON
+				cs.id = csm2m.currencysymbolmodel_id
+			JOIN previous_prices pp ON
+				lp.symbol_id = pp.symbol_id 
+			
+		WITH DATA;
+		
+		CREATE UNIQUE INDEX idx_stock_prices_matview_ticker_symbol ON stock_prices_matview(ticker_symbol);
+		
+		REFRESH MATERIALIZED VIEW CONCURRENTLY stock_prices_matview;
+		
+		
+		
+		Optional Postgres listen notify, also used in Redis pubsub:
+		SELECT pg_notify('stock_market_updates',CAST( (
+                                    SELECT 
+										JSON_AGG(
+										JSON_BUILD_OBJECT(
+										'id', id,
+										'ticker_short', ticker_short,
+										--'ticker_symbol', ticker_symbol,
+										'ticker_desc', ticker_desc, 
+										'current_price', current_price,         
+										'last_price', last_price, 
+										'last_traded_date', last_traded_date, 
+										'currency_code', currency_code ,                   
+										--'currency_char', currency_char
+										'html_code', html_code,
+										'currency_prefix', currency_prefix,
+										'currency_unicode' ,currency_unicode
+										)
+										) 
+									FROM stock_prices_matview;) AS TEXT))
+	7. Need to handle idle connection:
+					SET idle_in_transaction_session_timeout = '1min';

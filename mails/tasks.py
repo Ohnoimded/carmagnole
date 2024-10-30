@@ -56,9 +56,9 @@ def send_newsletter():
             redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id)
             
             send_email_task.delay(
-                subject="Le Carmagnole: Daily Nuggets",
+                subject="La Carmagnole: Daily Nuggets",
                 body=html_content,
-                from_email='Le Carmagnole <noreply@carmagnole.ohnoimded.com>',
+                from_email='La Carmagnole <noreply@carmagnole.ohnoimded.com>',
                 to_email=subscriber.email,
             )
 

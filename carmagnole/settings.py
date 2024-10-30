@@ -352,4 +352,4 @@ EMAIL_PORT = int(os.environ.get("AWS_SES_PORT",587))
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("AWS_SES_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("AWS_SES_PASSWORD")
-DEFAULT_FROM_EMAIL = "Le Carmagnole <noreply@carmagnole.ohnoimded.com>"
+DEFAULT_FROM_EMAIL = "La Carmagnole <noreply@carmagnole.ohnoimded.com>"

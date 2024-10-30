@@ -1,0 +1,141 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0" version="24.8.3">
+  <diagram name="Page-1" id="cRI6WN0pXQ-sUQA5aqVA">
+    <mxGraphModel dx="4097" dy="2131" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-4" value="&lt;div style=&quot;padding-top: 150px; margin-top: 200px;&quot;&gt;Live Market Data&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1176" y="320" width="369" height="585.99" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-5" value="Redis - Cache, Pub/Sub, Message queue" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="64" y="992" width="1490" height="167" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-6" target="IEE0IHRmQa3HwrrIBMkf-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-54" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-6" target="IEE0IHRmQa3HwrrIBMkf-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-6" value="Django/Uvicorn" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="64" y="743" width="353.14889999999997" height="162.99179999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-28" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-10" target="IEE0IHRmQa3HwrrIBMkf-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-10" value="&lt;div&gt;News ETL&lt;/div&gt;&lt;div&gt;(Cron)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="64" y="523" width="353.14889999999997" height="162.99179999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-15" value="Postgres" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;aspect=fixed;fillColor=none;fontSize=25;" vertex="1" parent="1">
+          <mxGeometry x="751" y="201" width="116" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645" y="605" as="sourcePoint" />
+            <mxPoint x="810" y="317" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="810" y="552" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-27" value="News NLP, Analytics&lt;br&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;(Celery)&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="64" y="317" width="353.14889999999997" height="162.99179999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-35" value="" style="endArrow=none;html=1;rounded=0;exitX=0.999;exitY=0.509;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="688" y="403" as="sourcePoint" />
+            <mxPoint x="810" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1040.57445" y="988.9976999999999" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="975" y="835" />
+              <mxPoint x="1041" y="835" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-37" value="ML-based Top Articles Finder" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="790" y="640" width="353.14889999999997" height="162.99179999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-44" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.84;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;endFill=1;" edge="1" parent="1" target="IEE0IHRmQa3HwrrIBMkf-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="840" y="960" as="sourcePoint" />
+            <mxPoint x="360" y="920" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="360" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-46" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endFill=0;" edge="1" parent="1" target="IEE0IHRmQa3HwrrIBMkf-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="840" y="960" as="sourcePoint" />
+            <mxPoint x="1000" y="1020" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1360" y="960" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-47" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.494;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="IEE0IHRmQa3HwrrIBMkf-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="800" y="960" as="sourcePoint" />
+            <mxPoint x="840" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-49" value="" style="endArrow=none;html=1;rounded=0;entryX=0.499;entryY=0.005;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.768;exitY=0.989;exitDx=0;exitDy=0;exitPerimeter=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-15" target="IEE0IHRmQa3HwrrIBMkf-37">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="810" y="400" as="sourcePoint" />
+            <mxPoint x="910" y="570" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="840" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-57" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-52" target="IEE0IHRmQa3HwrrIBMkf-56">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="700" />
+              <mxPoint x="600" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-52" value="&lt;div&gt;Scheduled Mail Sender&lt;/div&gt;&lt;div&gt;(Celery Beats)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="480" y="710" width="260" height="100.7872" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-55" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.461;entryY=1.003;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="IEE0IHRmQa3HwrrIBMkf-52">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="960" as="sourcePoint" />
+            <mxPoint x="710" y="850" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-56" value="SES" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="540" y="610" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-59" value="ELT" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1240.5" y="583" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-61" value="Update Views &amp;amp;&lt;br&gt;Table Cleanup" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1240.5" y="390" width="240" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-62" value="" style="endArrow=classic;html=1;rounded=0;exitX=-0.002;exitY=0.359;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1.014;entryY=0.886;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="IEE0IHRmQa3HwrrIBMkf-4" target="IEE0IHRmQa3HwrrIBMkf-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="850" y="610" as="sourcePoint" />
+            <mxPoint x="880" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-63" value="La Carmagnole - Backend Application Architecture" style="text;strokeColor=none;fillColor=none;html=1;fontSize=38;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+          <mxGeometry x="465" y="30" width="670" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-64" value="&lt;div&gt;Scheduled Cleanup and other Cron Jobs&lt;br&gt;&lt;/div&gt;&lt;div&gt;(Celery Beats)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=25;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="670" y="830" width="260" height="100.7872" as="geometry" />
+        </mxCell>
+        <mxCell id="IEE0IHRmQa3HwrrIBMkf-66" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="IEE0IHRmQa3HwrrIBMkf-64">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="800" y="960" as="sourcePoint" />
+            <mxPoint x="800" y="938" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

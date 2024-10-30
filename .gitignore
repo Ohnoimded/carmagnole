@@ -70,4 +70,3 @@ certificates/
 /etl/logs/api_log.log
 /etl/logs/etl_log.log
 /nginx/nginx.conf
-/README.md

@@ -97,7 +97,7 @@ class ETLTransformer:
                 data = json.load(f)
             if not data:
                 print(data)
-                raise "No data to transform"
+                raise Exception("No data to transform")
             data = data["response"]["results"]
             selected_attr = ["webUrl", "webPublicationDate", "sectionId"]
             selected_fields = [

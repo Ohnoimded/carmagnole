@@ -23,15 +23,12 @@ This is just a pet project meant for learning everything.
 ## Architecture
 ### Infrastructure Architecture Diagram 
 ![Infrastructure Architecture Diagram](./Architecture%20Diagrams/La%20Carmagnole%20-%20Infrastructure%20Architecture%20Diagram%20Dark.drawio.svg)
-<img src="./Architecture%20Diagrams/La Carmagnole - Infrastructure Architecture Diagram Dark.drawio.svg">
 
 ### Backend Application Architecture
 ![Backend Application Architecture](./Architecture%20Diagrams/La%20Carmagnole%20-%20Backend%20Application%20Architecture%20Dark.drawio.svg)
-<img src="./Architecture%20Diagrams/La Carmagnole - Backend Application Architecture Dark.drawio.svg">
 
 ### ERD
 ![ERD](./Architecture%20Diagrams/ERD%20Dark.png)
-<img src="./Architecture%20Diagrams/ERD Dark.png">
 
 ## License
 

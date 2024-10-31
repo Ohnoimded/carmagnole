@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import os
+from django.conf import settings
 from celery import Celery
 from datetime import timedelta
 from celery.schedules import  crontab
@@ -10,8 +11,9 @@ app = Celery('carmagnole')
 
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
-
-app.autodiscover_tasks()
+app.config_from_object("django.conf:settings")
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, force=True)
+# app.autodiscover_tasks()
 
 app.conf.result_expires = timedelta(hours=8)
 app.conf.broker_connection_retry_on_startup = True

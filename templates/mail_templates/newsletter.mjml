@@ -23,7 +23,7 @@
     </mj-raw>
     <mj-section padding-bottom="0px" background-color="#333333">
       <mj-column width="100%">
-        <mj-text align="center" font-family="Merriweather" color="#e15f5f" font-size="24px" font-weight="900">LE CARMAGNOLE</mj-text>
+        <mj-text align="center" font-family="Merriweather" color="#e15f5f" font-size="24px" font-weight="900">LA CARMAGNOLE</mj-text>
         <mj-divider padding-top="20px" padding-bottom="0px" padding-left="0px" padding-right="0px" border-width="1px" border-color="#f8f8f8"></mj-divider>
       </mj-column>
     </mj-section>

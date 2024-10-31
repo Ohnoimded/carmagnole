@@ -7,7 +7,7 @@ from smtplib import SMTPException, SMTPRecipientsRefused, SMTPSenderRefused, SMT
 
 import redis
 
-from mails.create_mail_for_the_day import create_mail
+from .create_mail_for_the_day import create_mail
 from utils.models import NewsletterSubscriberModel 
 import time
 from datetime import timedelta

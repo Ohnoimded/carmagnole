@@ -5,8 +5,8 @@ from celery import Celery
 from datetime import timedelta
 from celery.schedules import  crontab
 
-django.setup()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'carmagnole.settings')
+django.setup()
 
 app = Celery('carmagnole')
 

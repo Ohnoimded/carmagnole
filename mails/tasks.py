@@ -7,13 +7,14 @@ from smtplib import SMTPException, SMTPRecipientsRefused, SMTPSenderRefused, SMT
 
 import redis
 
-from .create_mail_for_the_day import create_mail
+from mails.create_mail_for_the_day import create_mail
 from utils.models import NewsletterSubscriberModel 
 import time
+from datetime import timedelta
 
 redis_client = redis.Redis(connection_pool=settings.REDIS["default"]["POOL"],encoding='utf-8',decode_responses=True)
 
-@shared_task
+@shared_task(expires=timedelta(hours=1))
 def send_email_task(subject, body, from_email, to_email):
     try:
         email = EmailMultiAlternatives(

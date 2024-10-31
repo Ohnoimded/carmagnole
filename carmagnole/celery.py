@@ -13,8 +13,15 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
-app.conf.result_expires = timedelta(hours=3)
+app.conf.result_expires = timedelta(hours=8)
 app.conf.broker_connection_retry_on_startup = True
+app.conf.broker_transport_options = {'visibility_timeout': 43200}
+app.conf.broker_heartbeat = 10
+app.conf.broker_connection_retry_on_startup = True
+app.conf.broker_connection_retry = True
+app.conf.broker_connection_max_retries = None  
+app.conf.broker_connection_retry_delay = 5
+app.conf.worker_max_tasks_per_child = 50
 
 app.conf.beat_schedule = {
     'send-newsletter-everyday': {

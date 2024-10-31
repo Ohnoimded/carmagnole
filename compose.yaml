@@ -51,7 +51,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.celery
-    command: celery -A carmagnole worker -l info  --concurrency=2 --max-tasks-per-child=3
+    command: celery -A carmagnole worker -l info  --concurrency=2 --max-tasks-per-child=50
     volumes:
       - type: bind
         source: ./

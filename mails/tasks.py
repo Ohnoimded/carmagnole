@@ -54,7 +54,8 @@ def send_newsletter():
             
             last_subscriber_id = subscriber.id
             redis_client.sadd('sent_newsletter_subscribers', last_subscriber_id)
-            redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id)
+            redis_client.expire('sent_newsletter_subscribers', 10800)
+            redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id, ex=10800)
             
             send_email_task.delay(
                 subject="La Carmagnole: Daily Nuggets",

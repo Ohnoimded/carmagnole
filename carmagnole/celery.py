@@ -15,7 +15,7 @@ app.autodiscover_tasks()
 
 app.conf.result_expires = timedelta(hours=8)
 app.conf.broker_connection_retry_on_startup = True
-app.conf.broker_transport_options = {'visibility_timeout': 43200}
+app.conf.broker_transport_options = {'visibility_timeout': 28800}
 app.conf.broker_heartbeat = 10
 app.conf.broker_connection_retry_on_startup = True
 app.conf.broker_connection_retry = True

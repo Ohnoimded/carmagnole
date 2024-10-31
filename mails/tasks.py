@@ -14,7 +14,7 @@ from datetime import timedelta
 
 redis_client = redis.Redis(connection_pool=settings.REDIS["default"]["POOL"],encoding='utf-8',decode_responses=True)
 
-@shared_task(expires=timedelta(hours=1))
+@shared_task
 def send_email_task(subject, body, from_email, to_email):
     try:
         email = EmailMultiAlternatives(

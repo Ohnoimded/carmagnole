@@ -11,7 +11,6 @@ app = Celery('carmagnole')
 
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.config_from_object("django.conf:settings")
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, force=True)
 # app.autodiscover_tasks()
 

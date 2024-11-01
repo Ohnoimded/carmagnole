@@ -30,38 +30,34 @@ def send_email_task(subject, body, from_email, to_email):
 
 @shared_task
 def send_newsletter():
-    html_content = redis_client.get('daily_newsletter')
-    if not html_content:
-        create_mail(pls_return=False)
+    while True:
         html_content = redis_client.get('daily_newsletter')
+        if not html_content:
+            create_mail(pls_return=False)
+            html_content = redis_client.get('daily_newsletter')
 
-    if isinstance(html_content, bytes):
-        html_content = html_content.decode('utf-8')
+        if isinstance(html_content, bytes):
+            html_content = html_content.decode('utf-8')
 
-    last_id = redis_client.get('sent_newsletter_subscribers_last_id')
-    if last_id:
-        last_id = int(last_id)
+        last_id = redis_client.get('sent_newsletter_subscribers_last_id')
+        last_id = int(last_id) if last_id else 0
+
         subscribers = NewsletterSubscriberModel.objects.filter(subscribed=True, id__gt=last_id).order_by('id')[:10]
-    else:
-        subscribers = NewsletterSubscriberModel.objects.filter(subscribed=True).order_by('id')[:10]
 
-    if not subscribers:
-        return  
+        if not subscribers:
+            break  
 
-    for subscriber in subscribers:
-        # It is memory heavy to add to set, if no. of subscribers grow. But SES 200 per day limit ruins the fun of destroying the container with memory fill
-        if not redis_client.sismember('sent_newsletter_subscribers', subscriber.id): 
-            
-            last_subscriber_id = subscriber.id
-            redis_client.sadd('sent_newsletter_subscribers', last_subscriber_id)
-            redis_client.expire('sent_newsletter_subscribers', 10800)
-            redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id, ex=10800)
-            
-            send_email_task.delay(
-                subject="La Carmagnole: Daily Nuggets",
-                body=html_content,
-                from_email='La Carmagnole <noreply@carmagnole.ohnoimded.com>',
-                to_email=subscriber.email,
-            )
+        for subscriber in subscribers:
+            if not redis_client.sismember('sent_newsletter_subscribers', subscriber.id):
+                last_subscriber_id = subscriber.id
+                redis_client.sadd('sent_newsletter_subscribers', last_subscriber_id)
+                redis_client.expire('sent_newsletter_subscribers', 10800)
+                redis_client.set('sent_newsletter_subscribers_last_id', last_subscriber_id, ex=10800)
 
-    
+                send_email_task.delay(
+                    subject="La Carmagnole: Daily Nuggets",
+                    body=html_content,
+                    from_email='La Carmagnole <noreply@carmagnole.ohnoimded.com>',
+                    to_email=subscriber.email,
+                )
+        time.sleep(2) 

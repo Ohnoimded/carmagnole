@@ -175,6 +175,12 @@ http {
             root   /usr/share/nginx/html;
             # internal;
         }
+        location = /robots.txt {
+            root   /usr/share/nginx/html;
+                allow all; 
+                log_not_found off; 
+                access_log off; 
+        }
     }
 
 

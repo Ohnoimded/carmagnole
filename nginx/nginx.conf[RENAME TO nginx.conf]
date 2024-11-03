@@ -80,7 +80,12 @@ http {
 
         include /etc/nginx/default.d/*.conf;
 
-
+        location = / {
+            if ($args) {
+                return 403;  
+            }
+        }
+        
         # Serve React app
         location / {
 
@@ -180,6 +185,13 @@ http {
                 allow all; 
                 log_not_found off; 
                 access_log off; 
+        }
+
+        location ~* /\.(env|git|config|py|json|zip|log)$ {
+            return 403;
+        }
+        location ~* \?.* {
+            return 403;
         }
     }
 

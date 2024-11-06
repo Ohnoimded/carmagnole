@@ -17,6 +17,7 @@ class GoogleCookieManager:
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_experimental_option('browserStartupTimeout', 1000000)
         chrome_driver_path = "/usr/bin/chromedriver"
         self.driver = webdriver.Chrome(service=Service(chrome_driver_path), options=chrome_options)
 

@@ -62,12 +62,19 @@ async def stream_messages() -> AsyncGenerator[str, None]:
 
     pubsub = redis_client.pubsub()
     await pubsub.subscribe(channel)
-
-    async for message in pubsub.listen():
-        if message['type'] == 'message':
-            data_payload = message['data']
-            yield f"event: stock_market_updates\nsent_time: {datetime.now().isoformat()}\ndata: {data_payload}\n\n"
-
+    
+    try:
+        async for message in pubsub.listen():
+            if message['type'] == 'message':
+                data_payload = message['data']
+                yield f"event: stock_market_updates\nsent_time: {datetime.now().isoformat()}\ndata: {data_payload}\n\n"
+    except asyncio.CancelledError:
+        pass
+    finally:
+        await pubsub.unsubscribe(channel)
+        await pubsub.close()
+        await redis_client.close()
+        
 @require_GET
 async def stream_messages_view(request, *args, **kwargs):
     response = StreamingHttpResponse(

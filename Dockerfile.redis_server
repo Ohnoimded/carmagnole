@@ -139,4 +139,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 6379
-CMD ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--activedefrag", "yes", "--client-output-buffer-limit", "normal", "0", "0", "0", "--maxclients", "1000"]
+CMD ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--activedefrag", "yes", "--client-output-buffer-limit", "normal", "0", "0", "0", "--maxclients", "2000"]

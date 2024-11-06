@@ -97,7 +97,7 @@ services:
       - .env
     networks:
       - app-network
-    mem_limit: 86m
+    mem_limit: 256M
     restart: always
 
 

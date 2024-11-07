@@ -19,6 +19,7 @@ from django.core.validators import validate_email
 from django.views.decorators.cache import cache_page
 
 from authenticate.authentication import AnonAuthentication
+from authenticate.permission import IsAuthenticatedOrToken
 from utils.models import NewsletterSubscriberModel
 from datetime import datetime, timezone, UTC
 
@@ -31,7 +32,7 @@ import json
 
 @api_version(version='1.0')
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticatedOrToken])
 # @authentication_classes([BasicAuthentication])
 @authentication_classes([AnonAuthentication])
 @cache_page(60 * 5)

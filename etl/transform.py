@@ -197,7 +197,7 @@ class ETLTransformer:
                 for pee in list_of_pees:
                     if not pattern.search(str(pee)):
                         content_length = len(pee.get_text(strip=True))
-                        if content_length >= 25:
+                        if content_length >= 80:
                             for tag in pee.find_all(['a', 'span']):
                                 tag.unwrap()
 

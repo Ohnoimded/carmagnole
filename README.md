@@ -1,6 +1,6 @@
 # La Carmagnole - Carmagnole (Le cul)
 
-Backend of Le Caramagnole Website, a not-so-leading newspaper with a focus on of NLP and ML.
+Backend of La Caramagnole Website, a not-so-leading newspaper with a focus on of NLP and ML.
 
 ## Description
 

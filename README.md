@@ -20,7 +20,7 @@ This is just a pet project meant for learning everything.
 * 1.0.5
     * Final Release
     
-**Full Changelog**: https://github.com/Ohnoimded/carmagnole/compare/v1.0.3...v1.0.5
+**Full Changelog**: https://github.com/Ohnoimded/carmagnole/compare/v1.0.4...v1.0.5
 
 ## Architecture
 ### Infrastructure Architecture Diagram 

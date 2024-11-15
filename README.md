@@ -17,10 +17,10 @@ This is just a pet project meant for learning everything.
 
 ## Version History
 
-* 1.0.4
-    * Updated Django version to the current patched version 5.1.3
+* 1.0.5
+    * Final Release
     
-**Full Changelog**: https://github.com/Ohnoimded/carmagnole/compare/v1.0.3...v1.0.4
+**Full Changelog**: https://github.com/Ohnoimded/carmagnole/compare/v1.0.3...v1.0.5
 
 ## Architecture
 ### Infrastructure Architecture Diagram 
